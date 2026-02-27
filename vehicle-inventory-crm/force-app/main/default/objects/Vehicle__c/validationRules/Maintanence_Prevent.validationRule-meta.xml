@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Maintanence_Prevent</fullName>
+    <active>true</active>
+    <description>Prevent booking a vehicle under maintenance.</description>
+    <errorConditionFormula>ISPICKVAL(Status__c, &quot;Maintenance&quot;)</errorConditionFormula>
+    <errorDisplayField>Name</errorDisplayField>
+    <errorMessage>&quot;This Vehicle is Under Maintenace.&quot;</errorMessage>
+</ValidationRule>
