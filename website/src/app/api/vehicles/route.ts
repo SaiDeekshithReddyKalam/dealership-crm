@@ -25,10 +25,11 @@ export async function GET(request: Request) {
 
     const result = await conn.query(query);
     return NextResponse.json({ success: true, vehicles: result.records });
-  } catch (error) {
-    console.error('SF vehicles fetch error:', error);
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : String(error);
+    console.error('SF vehicles fetch error:', msg);
     return NextResponse.json(
-      { success: false, error: 'Failed to fetch vehicles' },
+      { success: false, error: msg },
       { status: 500 }
     );
   }
