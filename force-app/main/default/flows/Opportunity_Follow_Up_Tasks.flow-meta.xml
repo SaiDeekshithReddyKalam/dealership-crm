@@ -111,10 +111,8 @@
             <value><booleanValue>true</booleanValue></value>
         </filters>
         <object>Opportunity</object>
+        <connector><targetReference>Check_Stage</targetReference></connector>
         <recordTriggerType>Update</recordTriggerType>
-        <scheduledPaths>
-            <connector><targetReference>Check_Stage</targetReference></connector>
-        </scheduledPaths>
         <triggerType>RecordAfterSave</triggerType>
     </start>
     <status>Active</status>
