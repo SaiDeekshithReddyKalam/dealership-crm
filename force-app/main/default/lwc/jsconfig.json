@@ -6,35 +6,18 @@
             "c/*": [
                 "./*"
             ],
-            "@salesforce/apex": [
-                "../../../../.sfdx/typings/lwc/apex.d.ts"
-            ],
             "@salesforce/apex/*": [
                 "../../../../.sfdx/typings/lwc/apex/*"
             ],
             "@salesforce/schema/*": [
                 "../../../../.sfdx/typings/lwc/sobjects/*"
-            ],
-            "@salesforce/label/*": [
-                "../../../../.sfdx/typings/lwc/customlabels.d.ts"
-            ],
-            "@salesforce/resourceUrl/*": [
-                "../../../../.sfdx/typings/lwc/staticresource.d.ts"
-            ],
-            "@salesforce/contentAssetUrl/*": [
-                "../../../../.sfdx/typings/lwc/contentasseturl.d.ts"
-            ],
-            "@salesforce/user/*": [
-                "../../../../.sfdx/typings/lwc/user.d.ts"
-            ],
-            "lightning/*": [
-                "../../../../.sfdx/typings/lwc/lightning.d.ts"
             ]
         }
     },
     "include": [
         "**/*",
-        "../../../../.sfdx/typings/lwc/**/*.d.ts"
+        "../../../../.sfdx/typings/lwc/apex/*.d.ts",
+        "../../../../.sfdx/typings/lwc/sobjects/*.d.ts"
     ],
     "typeAcquisition": {
         "include": [
