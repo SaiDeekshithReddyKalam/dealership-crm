@@ -1,0 +1,70 @@
+<template>
+    <lightning-card title="Vehicle Details" icon-name="standard:vehicle">
+        <div class="slds-p-around_medium">
+
+            <template lwc:if={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+            </template>
+
+            <template lwc:if={noVehicle}>
+                <p class="slds-text-color_weak">No vehicle linked to this opportunity.</p>
+            </template>
+
+            <template lwc:if={vehicle}>
+
+                <template lwc:if={showAging}>
+                    <div class="slds-notify slds-notify_alert slds-alert_warning slds-m-bottom_small" role="alert">
+                        <span class="slds-assistive-text">warning</span>
+                        <h2>This vehicle has been on the lot for <strong>{vehicle.Days_On_Lot__c}</strong> days — consider a price reduction.</h2>
+                    </div>
+                </template>
+
+                <div class="slds-grid slds-gutters slds-wrap">
+                    <div class="slds-col slds-size_1-of-2 slds-m-bottom_small">
+                        <p class="slds-text-title_caps slds-text-color_weak">VIN</p>
+                        <p class="slds-text-body_regular">{vehicle.VIN__c}</p>
+                    </div>
+                    <div class="slds-col slds-size_1-of-2 slds-m-bottom_small">
+                        <p class="slds-text-title_caps slds-text-color_weak">Vehicle</p>
+                        <p class="slds-text-body_regular">{vehicleLabel}</p>
+                    </div>
+                    <div class="slds-col slds-size_1-of-2 slds-m-bottom_small">
+                        <p class="slds-text-title_caps slds-text-color_weak">Status</p>
+                        <lightning-badge label={vehicle.Status__c}></lightning-badge>
+                    </div>
+                    <div class="slds-col slds-size_1-of-2 slds-m-bottom_small">
+                        <p class="slds-text-title_caps slds-text-color_weak">List Price</p>
+                        <template lwc:if={isEditing}>
+                            <lightning-input type="number" value={vehicle.List_Price__c} onchange={handlePriceChange} formatter="currency"></lightning-input>
+                        </template>
+                        <template lwc:else>
+                            <p class="slds-text-body_regular">{formattedPrice}</p>
+                        </template>
+                    </div>
+                    <div class="slds-col slds-size_1-of-2 slds-m-bottom_small">
+                        <p class="slds-text-title_caps slds-text-color_weak">Mileage</p>
+                        <p class="slds-text-body_regular">{formattedMileage}</p>
+                    </div>
+                    <div class="slds-col slds-size_1-of-2 slds-m-bottom_small">
+                        <p class="slds-text-title_caps slds-text-color_weak">Days on Lot</p>
+                        <p class="slds-text-body_regular">{vehicle.Days_On_Lot__c}</p>
+                    </div>
+                </div>
+
+                <template lwc:if={canEdit}>
+                    <div class="slds-m-top_medium">
+                        <template lwc:if={isEditing}>
+                            <lightning-button label="Save" variant="brand" onclick={handleSave} class="slds-m-right_small"></lightning-button>
+                            <lightning-button label="Cancel" onclick={handleCancel}></lightning-button>
+                        </template>
+                        <template lwc:else>
+                            <lightning-button label="Edit Price / Status" onclick={handleEdit}></lightning-button>
+                        </template>
+                    </div>
+                </template>
+
+            </template>
+
+        </div>
+    </lightning-card>
+</template>

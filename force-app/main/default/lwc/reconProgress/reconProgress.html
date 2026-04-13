@@ -1,0 +1,102 @@
+<template>
+    <lightning-card title="Recon Progress" icon-name="standard:work_order">
+        <div class="slds-p-around_medium">
+
+            <template lwc:if={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+            </template>
+
+            <template lwc:if={hasError}>
+                <p class="slds-text-color_error">Error loading recon data.</p>
+            </template>
+
+            <template lwc:if={noWorkOrder}>
+                <p class="slds-text-color_weak">No recon work orders found for this vehicle.</p>
+            </template>
+
+            <template lwc:if={workOrder}>
+                <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_medium">
+                    <div class="slds-col slds-size_1-of-3">
+                        <p class="slds-text-title_caps slds-text-color_weak">Status</p>
+                        <lightning-badge label={workOrder.Status__c}></lightning-badge>
+                    </div>
+                    <div class="slds-col slds-size_1-of-3">
+                        <p class="slds-text-title_caps slds-text-color_weak">Total Recon Cost</p>
+                        <p class="slds-text-heading_small">{formattedTotalCost}</p>
+                    </div>
+                    <div class="slds-col slds-size_1-of-3">
+                        <p class="slds-text-title_caps slds-text-color_weak">Vendor</p>
+                        <p>{workOrder.Vendor__c}</p>
+                    </div>
+                </div>
+
+                <h3 class="slds-text-heading_small slds-m-bottom_small">Line Items</h3>
+                <template lwc:if={hasLineItems}>
+                    <lightning-datatable
+                        data={lineItems}
+                        columns={columns}
+                        key-field="Id"
+                        hide-checkbox-column>
+                    </lightning-datatable>
+                </template>
+                <template lwc:else>
+                    <p class="slds-text-color_weak">No line items yet.</p>
+                </template>
+
+                <div class="slds-m-top_medium slds-grid slds-grid_align-spread">
+                    <lightning-button
+                        label="Add Line Item"
+                        variant="neutral"
+                        onclick={openModal}>
+                    </lightning-button>
+                    <template lwc:if={canComplete}>
+                        <lightning-button
+                            label="Mark Complete"
+                            variant="success"
+                            onclick={handleComplete}>
+                        </lightning-button>
+                    </template>
+                </div>
+            </template>
+
+            <template lwc:if={showModal}>
+                <section role="dialog" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container">
+                        <header class="slds-modal__header">
+                            <h2 class="slds-text-heading_medium">Add Line Item</h2>
+                        </header>
+                        <div class="slds-modal__content slds-p-around_medium">
+                            <lightning-combobox
+                                label="Type"
+                                value={newType}
+                                options={typeOptions}
+                                onchange={handleTypeChange}>
+                            </lightning-combobox>
+                            <lightning-input
+                                type="number"
+                                label="Cost"
+                                value={newCost}
+                                formatter="currency"
+                                onchange={handleCostChange}
+                                class="slds-m-top_small">
+                            </lightning-input>
+                            <lightning-input
+                                type="text"
+                                label="Notes"
+                                value={newNotes}
+                                onchange={handleNotesChange}
+                                class="slds-m-top_small">
+                            </lightning-input>
+                        </div>
+                        <footer class="slds-modal__footer">
+                            <lightning-button label="Cancel" onclick={closeModal} class="slds-m-right_small"></lightning-button>
+                            <lightning-button label="Save" variant="brand" onclick={handleAddLineItem}></lightning-button>
+                        </footer>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </template>
+
+        </div>
+    </lightning-card>
+</template>
