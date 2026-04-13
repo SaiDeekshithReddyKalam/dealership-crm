@@ -15,7 +15,7 @@ export async function GET(request: Request) {
              Mileage__c, List_Price__c, Status__c, Days_On_Lot__c,
              Lot_Location__c, Acquisition_Date__c
       FROM Vehicle__c
-      WHERE Status__c = 'Listed'
+      WHERE Status__c = 'Available'
     `;
 
     if (make) query += ` AND Make__c = '${make}'`;

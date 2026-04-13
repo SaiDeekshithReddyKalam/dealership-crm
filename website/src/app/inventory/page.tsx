@@ -3,7 +3,7 @@ import VehicleCard from '@/components/VehicleCard';
 import { Vehicle } from '@/lib/types';
 import { getSalesforceConnection } from '@/lib/salesforce';
 
-async function getVehicles(make?: string, maxPrice?: string, minYear?: string): Promise<Vehicle[]> {
+async function getVehicles(make?: string, maxPrice?: string, minYear?: string): Promise<{ vehicles: Vehicle[]; error: string | null }> {
   try {
     const conn = await getSalesforceConnection();
 
@@ -11,7 +11,7 @@ async function getVehicles(make?: string, maxPrice?: string, minYear?: string): 
       SELECT Id, Name, VIN__c, Year__c, Make__c, Model__c, Trim__c,
              List_Price__c, Status__c, Days_On_Lot__c, Acquisition_Date__c
       FROM Vehicle__c
-      WHERE Status__c IN ('Listed', 'Available', 'In Stock')
+      WHERE Status__c = 'Available'
     `;
     if (make) query += ` AND Make__c = '${make}'`;
     if (maxPrice) query += ` AND List_Price__c <= ${maxPrice}`;
@@ -19,10 +19,11 @@ async function getVehicles(make?: string, maxPrice?: string, minYear?: string): 
     query += ` ORDER BY Days_On_Lot__c ASC LIMIT 100`;
 
     const result = await conn.query(query);
-    return result.records as Vehicle[];
-  } catch (error) {
-    console.error('SF fetch error:', error);
-    return [];
+    return { vehicles: result.records as Vehicle[], error: null };
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error('SF fetch error:', message);
+    return { vehicles: [], error: message };
   }
 }
 
@@ -32,7 +33,7 @@ export default async function InventoryPage({
   searchParams: Promise<Record<string, string>>;
 }) {
   const params = await searchParams;
-  const vehicles = await getVehicles(params.make, params.maxPrice, params.minYear);
+  const { vehicles, error } = await getVehicles(params.make, params.maxPrice, params.minYear);
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8">
@@ -57,10 +58,16 @@ export default async function InventoryPage({
         ))}
       </div>
 
+      {error && (
+        <div className="mb-6 rounded-md bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+          <strong>Salesforce connection error:</strong> {error}
+        </div>
+      )}
+
       {vehicles.length === 0 ? (
         <div className="text-center py-20 text-gray-400">
           <p className="text-lg">No vehicles found.</p>
-          <p className="text-sm mt-2">Make sure your Salesforce org has vehicles with Status = Listed.</p>
+          <p className="text-sm mt-2">Make sure your Salesforce org has vehicles with Status = Available.</p>
           <Link href="/inventory" className="text-blue-600 text-sm mt-2 block">Clear filters</Link>
         </div>
       ) : (
