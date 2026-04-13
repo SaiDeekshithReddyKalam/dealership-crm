@@ -9,7 +9,7 @@ private class OpportunityStageGateHandlerTest {
         Vehicle__c vehicle = new Vehicle__c(
             Name = 'Test Vehicle',
             VIN__c = 'VIN123456789TEST01',
-            Status__c = 'In Stock',
+            Status__c = 'Available',
             Acquisition_Date__c = Date.today(),
             Acquisition_Cost__c = 10000
         );

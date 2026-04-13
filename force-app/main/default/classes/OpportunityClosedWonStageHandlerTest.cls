@@ -6,7 +6,7 @@ private class OpportunityClosedWonStageHandlerTest {
         Vehicle__c vehicle = new Vehicle__c(
             Name = 'Test Vehicle',
             VIN__c = '1HGCM82633A123456',
-            Status__c = 'In Stock',
+            Status__c = 'Available',
             Acquisition_Date__c = Date.today(),
             Acquisition_Cost__c = 10000
         );
